@@ -1,5 +1,7 @@
 package com.rna.calculator.base.enity;
 
+import org.springframework.util.StringUtils;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +18,7 @@ public class SimpleBaseTableEnity implements Serializable {
     /**
      * 用来保存实际值的缓存Map
      */
-    private Map<String,Double> valueMap = new HashMap<>();
+    private Map<String, Double> valueMap = new HashMap<>();
 
     private Integer computeType;
 
@@ -43,28 +45,28 @@ public class SimpleBaseTableEnity implements Serializable {
     private Double yAxisValueU;
 
 
-    public Double getValue(String key){
+    public Double getValue(String key) {
         return this.valueMap.get(key);
     }
 
     public void setyAxisValueA(Double yAxisValueA) {
         this.yAxisValueA = yAxisValueA;
-        this.valueMap.putIfAbsent(A,yAxisValueA);
+        this.valueMap.putIfAbsent(A, yAxisValueA);
     }
 
     public void setyAxisValueC(Double yAxisValueC) {
         this.yAxisValueC = yAxisValueC;
-        this.valueMap.putIfAbsent(C,yAxisValueC);
+        this.valueMap.putIfAbsent(C, yAxisValueC);
     }
 
     public void setyAxisValueG(Double yAxisValueG) {
         this.yAxisValueG = yAxisValueG;
-        this.valueMap.putIfAbsent(G,yAxisValueG);
+        this.valueMap.putIfAbsent(G, yAxisValueG);
     }
 
     public void setyAxisValueU(Double yAxisValueU) {
         this.yAxisValueU = yAxisValueU;
-        this.valueMap.putIfAbsent(U,yAxisValueU);
+        this.valueMap.putIfAbsent(U, yAxisValueU);
     }
 
 
@@ -78,17 +80,14 @@ public class SimpleBaseTableEnity implements Serializable {
     }
 
 
-
     public Double getyAxisValueG() {
         return yAxisValueG;
     }
 
 
-
     public Double getyAxisValueU() {
         return yAxisValueU;
     }
-
 
 
     public Integer getComputeType() {
@@ -105,6 +104,9 @@ public class SimpleBaseTableEnity implements Serializable {
 
     public void setBasePair(String basePair) {
         this.basePair = basePair;
+        if (!StringUtils.isEmpty(basePair)) {
+            this.basePairfirst = basePair.substring(0, 1);
+        }
     }
 
     public String getBasePairfirst() {
