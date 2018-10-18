@@ -2,9 +2,7 @@ package com.rna.calculator.service;
 
 import com.rna.calculator.base.component.ComputeElementMappingLoader;
 import com.rna.calculator.base.component.SimpleBaseTableLoader;
-import com.rna.calculator.base.enity.ComputeElementEnity;
-import com.rna.calculator.base.enity.ComputeResultEnity;
-import com.rna.calculator.base.enity.SimpleBaseTableEnity;
+import com.rna.calculator.base.enity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -15,6 +13,8 @@ import java.util.List;
 
 import static com.rna.calculator.base.enity.BaseConstant.COMPUTE_TYPES;
 import static com.rna.calculator.base.enity.SimpleBaseTableEnity.COMPUTE_TYPE_H;
+import static com.rna.calculator.base.enity.VariableEnity.VARIABLE_A;
+import static com.rna.calculator.base.enity.VariableEnity.VARIABLE_R;
 
 @Service
 public class ComputeService {
@@ -37,28 +37,66 @@ public class ComputeService {
     /**
      * 计算服务
      *
-     * @param inputElement 只接受 AUCG 四种元素的组合，前台判断是否合法
+     * @param requestEnity .inputElement  只接受 AUCG 四种元素的组合，前台判断是否合法
+     *                     .na
+     *                     .c
      * @return 计算结果
      */
-    public ComputeResultEnity compute(String inputElement) {
+    public ComputeResultEnity compute(RequestEnity requestEnity) {
         ComputeResultEnity result = new ComputeResultEnity();
-        if (StringUtils.isEmpty(inputElement)) {
+        if (isContinue(requestEnity)) {
             return result;
         }
-        result.setSource(inputElement);
-        result.setMappingElement(this.getMappingElement(inputElement));
-        result.setElements(this.initComputeElement(inputElement, result.getMappingElement()));
+        result.setVariableC(requestEnity.getVariableC());
+        result.setVariableNa(requestEnity.getVariableNa());
+        result.setSource(requestEnity.getInputElement());
+        result.setMappingElement(this.getMappingElement(requestEnity.getInputElement()));
+        result.setElements(this.initComputeElement(requestEnity.getInputElement(), result.getMappingElement()));
         this.fillingNumber(result.getElements());
+        this.computeResultHandS(result);
         this.computeResult(result);
         return result;
     }
 
     /**
-     * 计算结果
+     * 是否可以继续计算，如果缺少参数则直接返回
+     *
+     * @param requestEnity
+     * @return
+     */
+    private boolean isContinue(RequestEnity requestEnity) {
+        return StringUtils.isEmpty(requestEnity.getInputElement()) ||
+                requestEnity.getVariableC() == null ||
+                requestEnity.getVariableNa() == null;
+    }
+
+    /**
+     * 计算Tm
+     * Tm = H / ( A + (S / 1000) + (R * Math.log(C/4)) - 273.15 + (16.6 * Math.log10(Na))
+     *
+     * @param result
+     */
+    private void computeResult(ComputeResultEnity result) {
+        double tm = new BigDecimal(String.valueOf(result.getResultH()))
+                .divide(new BigDecimal(String.valueOf(VARIABLE_A))
+                        .add(new BigDecimal(
+                                new BigDecimal(String.valueOf(result.getResultS()))
+                                        .divide(new BigDecimal(String.valueOf(1000)), 10, BigDecimal.ROUND_HALF_UP).toString())
+                                .add(new BigDecimal(String.valueOf(VARIABLE_R))
+                                        .multiply(new BigDecimal(Math.log(new BigDecimal(String.valueOf(result.getVariableC()))
+                                                .divide(new BigDecimal(String.valueOf(4)), 10, BigDecimal.ROUND_HALF_UP).doubleValue()))))), 10, BigDecimal.ROUND_HALF_UP)
+                .subtract(new BigDecimal(String.valueOf(273.15)))
+                .add(new BigDecimal(new BigDecimal(String.valueOf(16.6))
+                        .multiply(new BigDecimal(Math.log10(result.getVariableNa()))).toString())).doubleValue();
+        result.setResultTm(new BigDecimal(tm).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+    }
+
+    /**
+     * 计算结果H /S
      *
      * @param result 结果对象
      */
-    private void computeResult(ComputeResultEnity result) {
+    private void computeResultHandS(ComputeResultEnity result) {
         double resultH = 0.0;
         double resultS = 0.0;
         for (ComputeElementEnity e : result.getElements()) {

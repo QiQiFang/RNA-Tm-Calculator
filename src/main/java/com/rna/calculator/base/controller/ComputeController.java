@@ -1,12 +1,14 @@
 package com.rna.calculator.base.controller;
 
 import com.rna.calculator.base.enity.ComputeResultEnity;
+import com.rna.calculator.base.enity.RequestEnity;
 import com.rna.calculator.base.enity.SimpleBaseTableEnity;
 import com.rna.calculator.service.ComputeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -18,16 +20,20 @@ public class ComputeController {
     private ComputeService service;
 
 
-    @RequestMapping(value = "/getbasetable", method = RequestMethod.GET)
+    @GetMapping(value = "/getbasetable")
     @ResponseBody
     public List<SimpleBaseTableEnity> getBaseTable() {
         return service.getBaseTable();
     }
 
-    @RequestMapping(value = "/compute", method = RequestMethod.GET)
+    @GetMapping(value = "/compute")
     @ResponseBody
-    public ComputeResultEnity compute(String inputElement){
-        return service.compute(inputElement);
+    public ComputeResultEnity compute(@RequestParam String inputElement, @RequestParam Double variableNa, @RequestParam Double variableC) {
+        RequestEnity requestEnity = new RequestEnity();
+        requestEnity.setInputElement(inputElement);
+        requestEnity.setVariableC(variableC);
+        requestEnity.setVariableNa(variableNa);
+        return service.compute(requestEnity);
     }
 
 }
