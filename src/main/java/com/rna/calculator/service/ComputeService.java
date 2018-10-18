@@ -1,6 +1,6 @@
 package com.rna.calculator.service;
 
-import com.rna.calculator.base.SimpleBaseTableLoader;
+import com.rna.calculator.base.component.SimpleBaseTableLoader;
 import com.rna.calculator.base.enity.SimpleBaseTableEnity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

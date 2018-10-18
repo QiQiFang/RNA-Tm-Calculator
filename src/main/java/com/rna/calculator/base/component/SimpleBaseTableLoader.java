@@ -1,4 +1,4 @@
-package com.rna.calculator.base;
+package com.rna.calculator.base.component;
 
 import com.rna.calculator.base.enity.SimpleBaseTableEnity;
 import org.springframework.stereotype.Component;
