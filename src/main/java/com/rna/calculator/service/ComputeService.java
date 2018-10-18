@@ -9,8 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.rna.calculator.base.enity.BaseConstant.COMPUTE_TYPES;
+import static com.rna.calculator.base.enity.SimpleBaseTableEnity.COMPUTE_TYPE_H;
 
 @Service
 public class ComputeService {
@@ -44,7 +48,47 @@ public class ComputeService {
         result.setSource(inputElement);
         result.setMappingElement(this.getMappingElement(inputElement));
         result.setElements(this.initComputeElement(inputElement, result.getMappingElement()));
+        this.fillingNumber(result.getElements());
+        this.computeResult(result);
         return result;
+    }
+
+    /**
+     * 计算结果
+     *
+     * @param result 结果对象
+     */
+    private void computeResult(ComputeResultEnity result) {
+        double resultH = 0.0;
+        double resultS = 0.0;
+        for (ComputeElementEnity e : result.getElements()) {
+            resultH = new BigDecimal(String.valueOf(resultH)).add(new BigDecimal(String.valueOf(e.getValueH()))).doubleValue();
+            resultS = new BigDecimal(String.valueOf(resultS)).add(new BigDecimal(String.valueOf(e.getValueS()))).doubleValue();
+        }
+        result.setResultH(resultH);
+        result.setResultS(resultS);
+    }
+
+    /**
+     * 填入实际值
+     *
+     * @param elementList 计算元素
+     */
+    private void fillingNumber(List<ComputeElementEnity> elementList) {
+        elementList.forEach(e -> COMPUTE_TYPES.forEach(t ->
+                simpleBaseTableLoader.getTableData()
+                        .stream()
+                        .filter(b -> b.getComputeType().equals(t))
+                        .filter(f -> f.getBasePairfirst().equals(e.getNodeElementEnity().getFirstNode()))
+                        .filter(x -> x.getAxisTypeX().equals(e.getNodeElementEnity().getAxisXNode()))
+                        .forEach(baseLine -> {
+                            if (t == COMPUTE_TYPE_H) {
+                                e.setValueH(baseLine.getValue(e.getNodeElementEnity().getAxisYNode()));
+                                return;
+                            }
+                            e.setValueS(baseLine.getValue(e.getNodeElementEnity().getAxisYNode()));
+                        })
+        ));
     }
 
     /**
