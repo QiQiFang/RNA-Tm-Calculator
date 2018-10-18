@@ -8,6 +8,8 @@ import java.util.List;
  */
 public class ComputeResultEnity implements Serializable {
 
+    private String source;
+
     /**
      * 与录入数据相映射的数据
      */
@@ -21,6 +23,14 @@ public class ComputeResultEnity implements Serializable {
     private Double resultH;
 
     private Double resultS;
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
 
     public String getMappingElement() {
         return mappingElement;

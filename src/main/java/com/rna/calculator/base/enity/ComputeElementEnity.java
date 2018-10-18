@@ -7,6 +7,10 @@ import java.io.Serializable;
  */
 public class ComputeElementEnity implements Serializable {
 
+    public ComputeElementEnity(){
+        this.nodeElementEnity = new NodeElementEnity();
+    }
+
     /**
      * 保存4个节点小元素对象
      */
