@@ -1,5 +1,6 @@
 package com.rna.calculator.base.controller;
 
+import com.rna.calculator.base.enity.ComputeResultEnity;
 import com.rna.calculator.base.enity.SimpleBaseTableEnity;
 import com.rna.calculator.service.ComputeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,17 @@ public class ComputeController {
     @Autowired
     private ComputeService service;
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
+
+    @RequestMapping(value = "/getbasetable", method = RequestMethod.GET)
     @ResponseBody
-    public List<SimpleBaseTableEnity> testTable() {
-        return service.testTable();
+    public List<SimpleBaseTableEnity> getBaseTable() {
+        return service.getBaseTable();
+    }
+
+    @RequestMapping(value = "/compute", method = RequestMethod.GET)
+    @ResponseBody
+    public ComputeResultEnity compute(String inputElement){
+        return service.compute(inputElement);
     }
 
 }

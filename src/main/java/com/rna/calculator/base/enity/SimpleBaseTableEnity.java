@@ -44,6 +44,12 @@ public class SimpleBaseTableEnity implements Serializable {
 
     private Double yAxisValueU;
 
+    private String computeTypeName;
+
+
+    public String getComputeTypeName() {
+        return computeTypeName;
+    }
 
     public Double getValue(String key) {
         return this.valueMap.get(key);
@@ -96,6 +102,11 @@ public class SimpleBaseTableEnity implements Serializable {
 
     public void setComputeType(Integer computeType) {
         this.computeType = computeType;
+        if(computeType == COMPUTE_TYPE_H){
+            this.computeTypeName = "H";
+        }else {
+            this.computeTypeName ="S";
+        }
     }
 
     public String getBasePair() {

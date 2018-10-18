@@ -11,17 +11,18 @@ import static com.rna.calculator.base.enity.BaseConstant.*;
  * @author fang.qiqi
  */
 @Component
-public class ComputeElementLoader {
-    private Map<String,String> computeElementMap;
+public class ComputeElementMappingLoader {
+    private Map<String, String> computeElementMap;
 
-    public ComputeElementLoader(){
+    public ComputeElementMappingLoader() {
         computeElementMap = new HashMap<>();
-        computeElementMap.put(A,U);
-        computeElementMap.put(U,A);
-        computeElementMap.put(C,G);
-        computeElementMap.put(G,C);
+        computeElementMap.put(A, U);
+        computeElementMap.put(U, A);
+        computeElementMap.put(C, G);
+        computeElementMap.put(G, C);
     }
-    public String getElementMapping(String element){
+
+    public String getElementMapping(String element) {
         return this.computeElementMap.get(element);
     }
 }
