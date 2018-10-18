@@ -1,12 +1,11 @@
 package com.rna.calculator.base.enity;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * 用来返回结果使用
  */
-public class ComputeResultEnity implements Serializable {
+public class ComputeResultEnity extends VariableEnity{
 
     private String source;
 
@@ -23,6 +22,16 @@ public class ComputeResultEnity implements Serializable {
     private Double resultH;
 
     private Double resultS;
+
+    private Double resultTm;
+
+    public Double getResultTm() {
+        return resultTm;
+    }
+
+    public void setResultTm(Double resultTm) {
+        this.resultTm = resultTm;
+    }
 
     public String getSource() {
         return source;
