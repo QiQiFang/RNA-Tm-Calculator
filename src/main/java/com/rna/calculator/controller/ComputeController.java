@@ -1,4 +1,4 @@
-package com.rna.calculator.base.controller;
+package com.rna.calculator.controller;
 
 import com.rna.calculator.base.enity.ComputeResultEnity;
 import com.rna.calculator.base.enity.RequestEnity;
