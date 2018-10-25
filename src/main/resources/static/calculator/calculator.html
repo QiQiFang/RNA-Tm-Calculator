@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RNA-Tm-Calculator-Demo</title>
+    <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+    <script type="text/javascript">
+        var calculate = function () {
+            var param = {
+                inputElement: $("#inputElement").val(),
+                variableC: $("#variableC").val(),
+                variableNa: $("#variableNa").val()
+            }
+            $.get('/compute', param, function (res) {
+                var result = 'Tm : ' + res.resultTm + ' enthalpy : ' + res.resultH + ' entropy : ' + res.resultS;
+                alert(result);
+            })
+
+        }
+    </script>
+</head>
+<body>
+<div style="margin-left: auto">
+    <h1>RNA-Tm-Calculator-Demo</h1>
+    <div>
+        <label>RNA sequences :</label>
+        <input id='inputElement'/>
+    </div>
+    <div>
+        <label>Concentration of the RNA :</label>
+        <input id='variableC'/>
+    </div>
+    <div>
+        <label>Concentration of sodium ions :</label>
+        <input id='variableNa'/>
+    </div>
+    <button onclick="calculate()">Calculate</button>
+</div>
+</body>
+</html>
