@@ -44,7 +44,7 @@ public class ComputeService {
      */
     public ComputeResultEnity compute(RequestEnity requestEnity) {
         ComputeResultEnity result = new ComputeResultEnity();
-        if (isContinue(requestEnity)) {
+        if (!isContinue(requestEnity)) {
             return result;
         }
         result.setVariableC(requestEnity.getVariableC());
@@ -54,8 +54,22 @@ public class ComputeService {
         result.setElements(this.initComputeElement(requestEnity.getInputElement(), result.getMappingElement()));
         this.fillingNumber(result.getElements());
         this.computeResultHandS(result);
+        this.supplement(requestEnity, result);
         this.computeResult(result);
         return result;
+    }
+
+    /**
+     * 补充 H和S的值，用于手算单个5'或3'时使用。后续会重构为自动计算5' 3'附加值的方法复用。
+     *
+     * @param result
+     */
+    private void supplement(RequestEnity requestEnity, ComputeResultEnity result) {
+        if (requestEnity.getSupplementH() != null && requestEnity.getSupplementS() != null) {
+            result.setResultH(new BigDecimal(requestEnity.getSupplementH()).add(new BigDecimal(result.getResultH())).doubleValue());
+            result.setResultS(new BigDecimal(requestEnity.getSupplementS()).add(new BigDecimal(result.getResultS())).doubleValue());
+        }
+
     }
 
     /**
@@ -65,9 +79,13 @@ public class ComputeService {
      * @return
      */
     private boolean isContinue(RequestEnity requestEnity) {
-        return StringUtils.isEmpty(requestEnity.getInputElement()) ||
-                requestEnity.getVariableC() == null ||
-                requestEnity.getVariableNa() == null;
+        if(StringUtils.isEmpty(requestEnity.getInputElement())){
+            return requestEnity.getSupplementH() !=null && requestEnity.getSupplementS() != null
+                    && requestEnity.getVariableC() != null && requestEnity.getVariableNa() != null;
+        }
+        return !StringUtils.isEmpty(requestEnity.getInputElement()) &&
+                requestEnity.getVariableC() != null &&
+                requestEnity.getVariableNa() != null;
     }
 
     /**

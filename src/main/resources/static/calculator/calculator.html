@@ -9,7 +9,15 @@
             var param = {
                 inputElement: $("#inputElement").val(),
                 variableC: $("#variableC").val(),
-                variableNa: $("#variableNa").val()
+                variableNa: $("#variableNa").val(),
+                supplementH: $("#supplementH").val(),
+                supplementS: $("#supplementS").val()
+            }
+            if(param.supplementH ===''){
+                param.supplementH = null;
+            }
+            if(param.supplementS ===''){
+                param.supplementS = null;
             }
             $.get('/compute', param, function (res) {
                 var result = 'Tm : ' + res.resultTm + ' enthalpy : ' + res.resultH + ' entropy : ' + res.resultS;
@@ -26,6 +34,12 @@
         <label>RNA sequences :</label>
         <input id='inputElement'/>
     </div>
+    <span>Supplement ：</span>
+        <label>enthalpy :</label>
+        <input id='supplementH'/>
+        <label>entropy :</label>
+        <input id='supplementS'/>
+    <span>If there is no additional information, please do not fill it out.</span>
     <div>
         <label>Concentration of the RNA :</label>
         <input id='variableC'/>

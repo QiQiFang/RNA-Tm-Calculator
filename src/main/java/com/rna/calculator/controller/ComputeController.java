@@ -28,11 +28,17 @@ public class ComputeController {
 
     @GetMapping(value = "/compute")
     @ResponseBody
-    public ComputeResultEnity compute(@RequestParam String inputElement, @RequestParam Double variableNa, @RequestParam Double variableC) {
+    public ComputeResultEnity compute(@RequestParam String inputElement,
+                                      @RequestParam Double variableNa,
+                                      @RequestParam Double variableC,
+                                      @RequestParam Double supplementH,
+                                      @RequestParam Double supplementS) {
         RequestEnity requestEnity = new RequestEnity();
         requestEnity.setInputElement(inputElement);
         requestEnity.setVariableC(variableC);
         requestEnity.setVariableNa(variableNa);
+        requestEnity.setSupplementH(supplementH);
+        requestEnity.setSupplementS(supplementS);
         return service.compute(requestEnity);
     }
 
