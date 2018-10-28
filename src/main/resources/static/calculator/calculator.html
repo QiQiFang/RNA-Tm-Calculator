@@ -13,17 +13,23 @@
                 supplementH: $("#supplementH").val(),
                 supplementS: $("#supplementS").val()
             }
-            if(param.supplementH ===''){
-                param.supplementH = null;
-            }
-            if(param.supplementS ===''){
-                param.supplementS = null;
+            for (n in param){
+                if(param[n] === ''){
+                    param[n] =null;
+                }
             }
             $.get('/compute', param, function (res) {
                 var result = 'Tm : ' + res.resultTm + ' enthalpy : ' + res.resultH + ' entropy : ' + res.resultS;
                 alert(result);
             })
 
+        }
+        var clean = function () {
+                $("#inputElement").val('');
+                $("#variableC").val('');
+                $("#variableNa").val('');
+                $("#supplementH").val('');
+                $("#supplementS").val('');
         }
     </script>
 </head>
@@ -49,6 +55,7 @@
         <input id='variableNa'/>
     </div>
     <button onclick="calculate()">Calculate</button>
+    <button onclick="clean()">Clean</button>
 </div>
 </body>
 </html>
