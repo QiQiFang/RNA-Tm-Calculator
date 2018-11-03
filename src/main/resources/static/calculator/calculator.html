@@ -10,49 +10,77 @@
                 inputElement: $("#inputElement").val(),
                 variableC: $("#variableC").val(),
                 variableNa: $("#variableNa").val(),
-                supplementH: $("#supplementH").val(),
-                supplementS: $("#supplementS").val()
+                left5Seq: $("#left5Seq").val(),
+                right3Seq: $("#right3Seq").val(),
+                left3Seq: $("#left3Seq").val(),
+                right5Seq: $("#right5Seq").val()
             }
-            for (n in param){
-                if(param[n] === ''){
-                    param[n] =null;
+            for (n in param) {
+                if (param[n] === '') {
+                    param[n] = null;
                 }
             }
             $.get('/compute', param, function (res) {
-                var result = 'Tm : ' + res.resultTm + ' enthalpy : ' + res.resultH + ' entropy : ' + res.resultS;
-                alert(result);
+                $("#resultTm").val(res.resultTm);
+                $("#resultH").val(res.resultH);
+                $("#resultS").val(res.resultS);
+                $("#mappingElement").val(res.mappingElement);
             })
 
         }
         var clean = function () {
-                $("#inputElement").val('');
-                $("#variableC").val('');
-                $("#variableNa").val('');
-                $("#supplementH").val('');
-                $("#supplementS").val('');
+            $("#inputElement").val('');
+            $("#variableC").val('');
+            $("#variableNa").val('');
+            $("#left5Seq").val('');
+            $("#right3Seq").val('');
+            $("#mappingElement").val('');
+            $("#left3Seq").val('');
+            $("#right5Seq").val('');
+            $("#resultTm").val('');
+            $("#resultH").val('');
+            $("#resultS").val('');
+        }
+        var changeInput = function (obj) {
+            $(obj).val($(obj).val().toLocaleUpperCase());
         }
     </script>
 </head>
 <body>
 <div style="margin-left: auto">
-    <h1>RNA-Tm-Calculator-Demo</h1>
+    <h1>RNA-Tm-Calculator-Beta</h1>
     <div>
-        <label>RNA sequences :</label>
-        <input id='inputElement'/>
+        <label>RNA sequences : </label>
+        <span>5'</span>
+        <input id='left5Seq' maxlength="1" onchange="changeInput(this)"/>
+        <input id='inputElement'  onchange="changeInput(this)"/>
+        <input id='right3Seq' maxlength="1" onchange="changeInput(this)"/>
+        <span>3'</span>
     </div>
-    <span>Supplement ：</span>
-        <label>enthalpy :</label>
-        <input id='supplementH'/>
-        <label>entropy :</label>
-        <input id='supplementS'/>
-    <span>If there is no additional information, please do not fill it out.</span>
+    <div>
+        <label>RNA sequences : </label>
+        <span>3'</span>
+        <input id='left3Seq' maxlength="1" onchange="changeInput(this)"/>
+        <input id='mappingElement' readonly/>
+        <input id='right5Seq' maxlength="1" onchange="changeInput(this)"/>
+        <span>5'</span>
+    </div>
     <div>
         <label>Concentration of the RNA :</label>
-        <input id='variableC'/>
+        <input id='variableC' type="number"/>
+        <label> μM   </label>
+        <div></div>
+        <label>Concentration of Na<sup>+</sup> :</label>
+        <input id='variableNa' type="number"/>
+        <label>M</label>
     </div>
     <div>
-        <label>Concentration of sodium ions :</label>
-        <input id='variableNa'/>
+        <label>Tm :</label>
+        <input id='resultTm' readonly/>
+        <label>enthalpy :</label>
+        <input id='resultH' readonly/>
+        <label>entropy :</label>
+        <input id='resultS' readonly/>
     </div>
     <button onclick="calculate()">Calculate</button>
     <button onclick="clean()">Clean</button>

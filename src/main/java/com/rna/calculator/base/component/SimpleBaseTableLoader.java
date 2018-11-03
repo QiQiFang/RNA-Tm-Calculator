@@ -27,6 +27,30 @@ public class SimpleBaseTableLoader {
     private static final String G_X_C_Y = "GXCY";
 
     private static final String U_X_A_Y = "UXAY";
+    // 3'
+    private static final String A_U_3 = "AU3";
+
+    private static final String C_G_3 = "CG3";
+
+    private static final String G_C_3 = "GC3";
+
+    private static final String U_A_3 = "UA3";
+    // 5'
+    private static final String A_U_5 = "AU5";
+
+    private static final String C_G_5 = "CG5";
+
+    private static final String G_C_5 = "GC5";
+
+    private static final String U_A_5 = "UA5";
+
+    private static final String A_U = "AU";
+
+    private static final String C_G = "CG";
+
+    private static final String G_C = "GC";
+
+    private static final String U_A = "UA";
 
 
     public SimpleBaseTableLoader() {
@@ -73,6 +97,27 @@ public class SimpleBaseTableLoader {
         tableEnitys.add(getTableEnityTypeS(U_X_A_Y, G, -8.5, -27.8, -25.0, -24.9));
         tableEnitys.add(getTableEnityTypeS(U_X_A_Y, U, -18.4, -2.5, -40.2, 6.0));
 
+        //table2
+        //H
+        tableEnitys.add(getTableEnityForTable2(A_U_3, A_U, -4.9, -0.9, -5.5, -2.3, COMPUTE_TYPE_H));
+        tableEnitys.add(getTableEnityForTable2(C_G_3, C_G, -9.0, -4.1, -8.6, -7.5, COMPUTE_TYPE_H));
+        tableEnitys.add(getTableEnityForTable2(G_C_3, G_C, -7.4, -2.8, -6.4, -3.6, COMPUTE_TYPE_H));
+        tableEnitys.add(getTableEnityForTable2(U_A_3, U_A, -5.7, -0.7, -5.8, -2.2, COMPUTE_TYPE_H));
+        tableEnitys.add(getTableEnityForTable2(A_U_5, A_U, 1.6, 2.2, 0.7, 3.1, COMPUTE_TYPE_H));
+        tableEnitys.add(getTableEnityForTable2(C_G_5, C_G, -2.4, 3.3, 0.8, -1.4, COMPUTE_TYPE_H));
+        tableEnitys.add(getTableEnityForTable2(G_C_5, G_C, -1.6, 0.7, -4.6, -0.4, COMPUTE_TYPE_H));
+        tableEnitys.add(getTableEnityForTable2(U_A_5, U_A, -0.5, 6.9, 0.6, 0.6, COMPUTE_TYPE_H));
+
+        //S
+        tableEnitys.add(getTableEnityForTable2(A_U_3, A_U, -13.2, -1.2, -15.0, -5.4, COMPUTE_TYPE_S));
+        tableEnitys.add(getTableEnityForTable2(C_G_3, C_G, -23.4, -10.7, -22.2, -20.4, COMPUTE_TYPE_S));
+        tableEnitys.add(getTableEnityForTable2(G_C_3, G_C, -20.0, -7.9, -16.6, -9.7, COMPUTE_TYPE_S));
+        tableEnitys.add(getTableEnityForTable2(U_A_3, U_A, -16.4, -1.8, -16.4, -6.8, COMPUTE_TYPE_S));
+        tableEnitys.add(getTableEnityForTable2(A_U_5, A_U, 6.1, 7.9, 3.4, 10.6, COMPUTE_TYPE_S));
+        tableEnitys.add(getTableEnityForTable2(C_G_5, C_G, -6.0, 11.8, 3.4, -4.3, COMPUTE_TYPE_S));
+        tableEnitys.add(getTableEnityForTable2(G_C_5, G_C, -4.5, 3.1, -14.8, -1.2, COMPUTE_TYPE_S));
+        tableEnitys.add(getTableEnityForTable2(U_A_5, U_A, -0.7, 22.8, 2.7, 2.7, COMPUTE_TYPE_S));
+
 
     }
 
@@ -84,19 +129,34 @@ public class SimpleBaseTableLoader {
     private SimpleBaseTableEnity getTableEnityTypeH(String basePair, String axisTypeX, double yAxisValueA,
                                                     double yAxisValueC, double yAxisValueG, double yAxisValueU
     ) {
-        return this.getTableEnity(basePair, axisTypeX, yAxisValueA, yAxisValueC, yAxisValueG, yAxisValueU, COMPUTE_TYPE_H);
+        return this.getTableEnityForTable1(basePair, axisTypeX, yAxisValueA, yAxisValueC, yAxisValueG, yAxisValueU, COMPUTE_TYPE_H);
     }
 
     private SimpleBaseTableEnity getTableEnityTypeS(String basePair, String axisTypeX, double yAxisValueA,
                                                     double yAxisValueC, double yAxisValueG, double yAxisValueU) {
-        return this.getTableEnity(basePair, axisTypeX, yAxisValueA, yAxisValueC, yAxisValueG, yAxisValueU, COMPUTE_TYPE_S);
+        return this.getTableEnityForTable1(basePair, axisTypeX, yAxisValueA, yAxisValueC, yAxisValueG, yAxisValueU, COMPUTE_TYPE_S);
+    }
+
+    private SimpleBaseTableEnity getTableEnityForTable1(String basePair, String axisTypeX, double yAxisValueA,
+                                                        double yAxisValueC, double yAxisValueG, double yAxisValueU,
+                                                        int computeType) {
+        String basePairSearch = basePair.substring(0, 1);
+        return this.getTableEnity(basePair, axisTypeX, yAxisValueA, yAxisValueC, yAxisValueG, yAxisValueU, basePairSearch, computeType);
+    }
+
+
+    private SimpleBaseTableEnity getTableEnityForTable2(String basePair, String axisTypeX, double yAxisValueA,
+                                                        double yAxisValueC, double yAxisValueG, double yAxisValueU,
+                                                        int computeType) {
+        return this.getTableEnity(basePair, axisTypeX, yAxisValueA, yAxisValueC, yAxisValueG, yAxisValueU, basePair, computeType);
     }
 
     private SimpleBaseTableEnity getTableEnity(String basePair, String axisTypeX, double yAxisValueA,
                                                double yAxisValueC, double yAxisValueG, double yAxisValueU,
-                                               int computeType) {
+                                               String basePairSearch, int computeType) {
         SimpleBaseTableEnity enity = new SimpleBaseTableEnity();
         enity.setBasePair(basePair);
+        enity.setBasePairSearch(basePairSearch);
         enity.setAxisTypeX(axisTypeX);
         enity.setComputeType(computeType);
         enity.setyAxisValueA(yAxisValueA);

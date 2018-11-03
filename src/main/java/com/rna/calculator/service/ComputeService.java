@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 
 import static com.rna.calculator.base.enity.BaseConstant.COMPUTE_TYPES;
 import static com.rna.calculator.base.enity.SimpleBaseTableEnity.COMPUTE_TYPE_H;
@@ -49,11 +50,13 @@ public class ComputeService {
         }
         result.setVariableC(requestEnity.getVariableC());
         result.setVariableNa(requestEnity.getVariableNa());
-        result.setSource(requestEnity.getInputElement());
+        result.setInputElement(requestEnity.getInputElement());
         result.setMappingElement(this.getMappingElement(requestEnity.getInputElement()));
         result.setElements(this.initComputeElement(requestEnity.getInputElement(), result.getMappingElement()));
         this.fillingNumber(result.getElements());
-        this.computeResultHandS(result);
+        ValueEnity valueHandS = this.computeResultHandS(result.getElements());
+        result.setResultH(valueHandS.getResultH());
+        result.setResultS(valueHandS.getResultS());
         this.supplement(requestEnity, result);
         this.computeResult(result);
         return result;
@@ -65,12 +68,86 @@ public class ComputeService {
      * @param result
      */
     private void supplement(RequestEnity requestEnity, ComputeResultEnity result) {
-        if (requestEnity.getSupplementH() != null && requestEnity.getSupplementS() != null) {
-            result.setResultH(new BigDecimal(requestEnity.getSupplementH()).add(new BigDecimal(result.getResultH())).doubleValue());
-            result.setResultS(new BigDecimal(requestEnity.getSupplementS()).add(new BigDecimal(result.getResultS())).doubleValue());
+        List<ComputeElementEnity> supplementElements = initSupplementElements(requestEnity,result);
+        //fillingNumber填充值
+        this.fillingNumber(supplementElements);
+        ValueEnity valueHandS =  this.computeResultHandS(supplementElements);
+        result.setResultH(new BigDecimal(valueHandS.getResultH()).add(new BigDecimal(result.getResultH())).toString());
+        result.setResultS(new BigDecimal(valueHandS.getResultS()).add(new BigDecimal(result.getResultS())).toString());
+    }
+
+    private List<ComputeElementEnity> initSupplementElements(RequestEnity requestEnity, ComputeResultEnity result) {
+        List<ComputeElementEnity> element = new ArrayList<>();
+        String seq1 = result.getInputElement();
+        String seq2 = result.getMappingElement();
+        // left 5'
+        if (!StringUtils.isEmpty(requestEnity.getLeft5Seq())) {
+            element.add(initSupplementElementEnity(
+                    getFirstString(seq1),
+                    getFirstString(seq2),
+                    5,
+                    requestEnity.getLeft5Seq(),
+                    (a, b) -> a + b));
+        }
+        // left 3'
+        if (!StringUtils.isEmpty(requestEnity.getLeft3Seq())) {
+            element.add(initSupplementElementEnity(
+                    getFirstString(seq1),
+                    getFirstString(seq2),
+                    3,
+                    requestEnity.getLeft3Seq(),
+                    (a, b) -> b + a));
         }
 
+        // right 3'
+        if (!StringUtils.isEmpty(requestEnity.getRight3Seq())) {
+            element.add(initSupplementElementEnity(
+                    getLastString(seq1),
+                    getLastString(seq2),
+                    3,
+                    requestEnity.getRight3Seq(),
+                    (a, b) -> a + b));
+        }
+
+        // right 5'
+        if(!StringUtils.isEmpty(requestEnity.getRight5Seq())){
+            element.add(initSupplementElementEnity(
+                    getLastString(seq1),
+                    getLastString(seq2),
+                    5,
+                    requestEnity.getRight5Seq(),
+                    (a, b) -> b + a));
+        }
+
+
+        return element;
     }
+
+    private ComputeElementEnity initSupplementElementEnity(String e1, String e2, int flag, String seq, BiFunction<String, String, String> biFunction) {
+        ComputeElementEnity ce = new ComputeElementEnity();
+        NodeElementEnity ne = new NodeElementEnity();
+        String sumElement = sumString(e1, e2, biFunction);
+        ne.setFirstNode(sumElement + flag);
+        ne.setAxisXNode(sumElement);
+        ne.setAxisYNode(seq);
+        ce.setNodeElementEnity(ne);
+        return ce;
+    }
+
+
+    private String sumString(String e1, String e2, BiFunction<String, String, String> biFunction) {
+        return biFunction.apply(e1, e2);
+    }
+
+    private String getFirstString(String src) {
+        return src.substring(0, 1);
+    }
+
+
+    private String getLastString(String src) {
+        return src.substring(src.length() - 1);
+    }
+
 
     /**
      * 是否可以继续计算，如果缺少参数则直接返回
@@ -79,10 +156,6 @@ public class ComputeService {
      * @return
      */
     private boolean isContinue(RequestEnity requestEnity) {
-        if(StringUtils.isEmpty(requestEnity.getInputElement())){
-            return requestEnity.getSupplementH() !=null && requestEnity.getSupplementS() != null
-                    && requestEnity.getVariableC() != null && requestEnity.getVariableNa() != null;
-        }
         return !StringUtils.isEmpty(requestEnity.getInputElement()) &&
                 requestEnity.getVariableC() != null &&
                 requestEnity.getVariableNa() != null;
@@ -106,23 +179,25 @@ public class ComputeService {
                 .subtract(new BigDecimal(String.valueOf(273.15)))
                 .add(new BigDecimal(new BigDecimal(String.valueOf(16.6))
                         .multiply(new BigDecimal(Math.log10(result.getVariableNa()))).toString())).doubleValue();
-        result.setResultTm(new BigDecimal(tm).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+        result.setResultTm(new BigDecimal(tm).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
     }
 
     /**
      * 计算结果H /S
      *
-     * @param result 结果对象
+     * @param elementList 元素集合
      */
-    private void computeResultHandS(ComputeResultEnity result) {
-        double resultH = 0.0;
-        double resultS = 0.0;
-        for (ComputeElementEnity e : result.getElements()) {
-            resultH = new BigDecimal(String.valueOf(resultH)).add(new BigDecimal(String.valueOf(e.getValueH()))).doubleValue();
-            resultS = new BigDecimal(String.valueOf(resultS)).add(new BigDecimal(String.valueOf(e.getValueS()))).doubleValue();
+    private ValueEnity computeResultHandS(List<ComputeElementEnity> elementList) {
+        ValueEnity ve = new ValueEnity();
+        String resultH = "0";
+        String resultS = "0";
+        for (ComputeElementEnity e : elementList) {
+            resultH = new BigDecimal(String.valueOf(resultH)).add(new BigDecimal(String.valueOf(e.getValueH()))).toString();
+            resultS = new BigDecimal(String.valueOf(resultS)).add(new BigDecimal(String.valueOf(e.getValueS()))).toString();
         }
-        result.setResultH(resultH);
-        result.setResultS(resultS);
+        ve.setResultH(resultH);
+        ve.setResultS(resultS);
+        return ve;
     }
 
     /**
@@ -135,7 +210,7 @@ public class ComputeService {
                 simpleBaseTableLoader.getTableData()
                         .stream()
                         .filter(b -> b.getComputeType().equals(t))
-                        .filter(f -> f.getBasePairfirst().equals(e.getNodeElementEnity().getFirstNode()))
+                        .filter(f -> f.getBasePairSearch().equals(e.getNodeElementEnity().getFirstNode()))
                         .filter(x -> x.getAxisTypeX().equals(e.getNodeElementEnity().getAxisXNode()))
                         .forEach(baseLine -> {
                             if (t == COMPUTE_TYPE_H) {

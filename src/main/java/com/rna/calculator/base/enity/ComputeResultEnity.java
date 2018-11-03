@@ -5,49 +5,35 @@ import java.util.List;
 /**
  * 用来返回结果使用
  */
-public class ComputeResultEnity extends VariableEnity{
+public class ComputeResultEnity extends RequestEnity{
 
-    private String source;
 
-    /**
-     * 与录入数据相映射的数据
-     */
-    private String mappingElement;
+
 
     /**
      * 生成的计算元素
      */
     private List<ComputeElementEnity> elements;
 
-    private Double resultH;
+    private List<ComputeElementEnity> supplementElements;
 
-    private Double resultS;
+    private String resultH;
 
-    private Double resultTm;
+    private String resultS;
 
-    public Double getResultTm() {
-        return resultTm;
+    private String resultTm;
+
+
+    public List<ComputeElementEnity> getSupplementElements() {
+        return supplementElements;
     }
 
-    public void setResultTm(Double resultTm) {
-        this.resultTm = resultTm;
+    public void setSupplementElements(List<ComputeElementEnity> supplementElements) {
+        this.supplementElements = supplementElements;
     }
 
-    public String getSource() {
-        return source;
-    }
 
-    public void setSource(String source) {
-        this.source = source;
-    }
 
-    public String getMappingElement() {
-        return mappingElement;
-    }
-
-    public void setMappingElement(String mappingElement) {
-        this.mappingElement = mappingElement;
-    }
 
     public List<ComputeElementEnity> getElements() {
         return elements;
@@ -57,19 +43,27 @@ public class ComputeResultEnity extends VariableEnity{
         this.elements = elements;
     }
 
-    public Double getResultH() {
+    public String getResultH() {
         return resultH;
     }
 
-    public void setResultH(Double resultH) {
+    public void setResultH(String resultH) {
         this.resultH = resultH;
     }
 
-    public Double getResultS() {
+    public String getResultS() {
         return resultS;
     }
 
-    public void setResultS(Double resultS) {
+    public void setResultS(String resultS) {
         this.resultS = resultS;
+    }
+
+    public String getResultTm() {
+        return resultTm;
+    }
+
+    public void setResultTm(String resultTm) {
+        this.resultTm = resultTm;
     }
 }

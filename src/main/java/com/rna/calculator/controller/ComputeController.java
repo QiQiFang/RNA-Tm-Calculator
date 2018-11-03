@@ -31,14 +31,18 @@ public class ComputeController {
     public ComputeResultEnity compute(@RequestParam String inputElement,
                                       @RequestParam Double variableNa,
                                       @RequestParam Double variableC,
-                                      @RequestParam Double supplementH,
-                                      @RequestParam Double supplementS) {
+                                      @RequestParam String left5Seq,
+                                      @RequestParam String left3Seq,
+                                      @RequestParam String right3Seq,
+                                      @RequestParam String right5Seq) {
         RequestEnity requestEnity = new RequestEnity();
         requestEnity.setInputElement(inputElement);
         requestEnity.setVariableC(variableC);
         requestEnity.setVariableNa(variableNa);
-        requestEnity.setSupplementH(supplementH);
-        requestEnity.setSupplementS(supplementS);
+        requestEnity.setLeft5Seq(left5Seq);
+        requestEnity.setLeft3Seq(left3Seq);
+        requestEnity.setRight3Seq(right3Seq);
+        requestEnity.setRight5Seq(right5Seq);
         return service.compute(requestEnity);
     }
 

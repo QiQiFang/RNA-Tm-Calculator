@@ -26,7 +26,7 @@ public class SimpleBaseTableEnity implements Serializable {
     /**
      * BasePair 首字母，用来检索使用
      */
-    private String basePairfirst;
+    private String basePairSearch;
     /**
      * A C G U
      */
@@ -116,12 +116,16 @@ public class SimpleBaseTableEnity implements Serializable {
     public void setBasePair(String basePair) {
         this.basePair = basePair;
         if (!StringUtils.isEmpty(basePair)) {
-            this.basePairfirst = basePair.substring(0, 1);
+            this.basePairSearch = basePair.substring(0, 1);
         }
     }
 
-    public String getBasePairfirst() {
-        return basePairfirst;
+    public void setBasePairSearch(String basePairSearch){
+        this.basePairSearch = basePairSearch;
+    }
+
+    public String getBasePairSearch() {
+        return basePairSearch;
     }
 
     public String getAxisTypeX() {
