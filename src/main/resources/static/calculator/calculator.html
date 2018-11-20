@@ -20,7 +20,7 @@
                     param[n] = null;
                 }
             }
-            $.get('/compute', param, function (res) {
+            $.post('/compute', param, function (res) {
                 $("#resultTm").val(res.resultTm);
                 $("#resultH").val(res.resultH);
                 $("#resultS").val(res.resultS);
@@ -77,10 +77,13 @@
     <div>
         <label>Tm :</label>
         <input id='resultTm' readonly/>
-        <label>enthalpy :</label>
+        <label>摄氏度</label>
+        <label>ΔH :</label>
         <input id='resultH' readonly/>
-        <label>entropy :</label>
+        <label>kcal/mol</label>
+        <label>ΔS :</label>
         <input id='resultS' readonly/>
+        <label>eu</label>
     </div>
     <button onclick="calculate()">Calculate</button>
     <button onclick="clean()">Clean</button>
