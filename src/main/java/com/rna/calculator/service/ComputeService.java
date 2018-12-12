@@ -72,6 +72,13 @@ public class ComputeService {
         //fillingNumber填充值
         this.fillingNumber(supplementElements);
         ValueEnity valueHandS =  this.computeResultHandS(supplementElements);
+        //添加偏移量
+        if(requestEnity.getSupplementS() != null){
+            result.setResultS(new BigDecimal(requestEnity.getSupplementS()).add(new BigDecimal(result.getResultS())).toString());
+        }
+        if(requestEnity.getSupplementH() != null){
+            result.setResultS(new BigDecimal(requestEnity.getSupplementH()).add(new BigDecimal(result.getResultS())).toString());
+        }
         result.setResultH(new BigDecimal(valueHandS.getResultH()).add(new BigDecimal(result.getResultH())).toString());
         result.setResultS(new BigDecimal(valueHandS.getResultS()).add(new BigDecimal(result.getResultS())).toString());
     }

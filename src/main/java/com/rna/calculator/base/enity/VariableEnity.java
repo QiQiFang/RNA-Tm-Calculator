@@ -11,12 +11,29 @@ public class VariableEnity implements Serializable {
 
     private Double variableC;
 
-
-
     public static final double VARIABLE_A = -0.0108;
 
     public static final double VARIABLE_R = 0.00199;
 
+    private Double supplementH;
+
+    private Double supplementS;
+
+    public Double getSupplementH() {
+        return supplementH;
+    }
+
+    public void setSupplementH(Double supplementH) {
+        this.supplementH = supplementH;
+    }
+
+    public Double getSupplementS() {
+        return supplementS;
+    }
+
+    public void setSupplementS(Double supplementS) {
+        this.supplementS = supplementS;
+    }
 
     public Double getVariableNa() {
         return variableNa;
