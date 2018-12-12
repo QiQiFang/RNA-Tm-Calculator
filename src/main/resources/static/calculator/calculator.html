@@ -42,6 +42,8 @@
             $("#resultTm").val('');
             $("#resultH").val('');
             $("#resultS").val('');
+            $("#supplementH").val('');
+            $("#supplementS").val('');
         }
         var changeInput = function (obj) {
             $(obj).val($(obj).val().toLocaleUpperCase());
@@ -70,9 +72,9 @@
     <div>
         <span>Supplement ：</span>
         <label>enthalpy :</label>
-        <input id='supplementH'/>
+        <input id='supplementH' type="number"/>
         <label>entropy :</label>
-        <input id='supplementS'/>
+        <input id='supplementS' type="number"/>
         <span>If there is no additional information, please do not fill it out.</span>
     </div>
     <div>
